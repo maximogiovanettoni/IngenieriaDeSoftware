@@ -1,0 +1,190 @@
+:root{
+  --panel:#2a2a2a; --panel-2:#1a1a1a; --border:#4a5565;
+  --text:#fff; --muted:#99a1af;
+  --blue-1:#155dfc; --blue-2:#2b7fff; --accent:#51a2ff;
+  --green-1:#10b981; --green-2:#059669;
+}
+
+.osm{
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  padding:16px; z-index:50;
+}
+.osm__backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.5);
+  animation: osm-fade .15s ease-out;
+}
+.osm__card{
+  position:relative; width:100%; max-width:520px; background:var(--panel);
+  border:1px solid var(--border); border-radius:16px; padding:24px;
+  animation: osm-pop .18s ease-out; text-align:center;
+  box-shadow:0 24px 70px rgba(0,0,0,.35);
+}
+
+/* Icono principal */
+.osm__icon{ position:relative; width:84px; height:84px; margin:0 auto 14px; transform:scale(.9); opacity:0; }
+.osm__icon.is-in{ transform:scale(1); opacity:1; transition:transform .35s cubic-bezier(.2,.8,.2,1), opacity .25s ease; }
+.osm__icon-glow{
+  position:absolute; inset:0; border-radius:999px;
+  background: radial-gradient(ellipse at center, rgba(16,185,129,.25), rgba(16,185,129,0) 60%);
+  filter: blur(6px); animation: osm-pulse 1.6s ease-in-out infinite;
+}
+.osm__icon-badge{
+  position:relative; display:inline-flex; align-items:center; justify-content:center;
+  width:84px; height:84px; border-radius:999px; color:#fff;
+  background: linear-gradient(135deg, var(--green-1), var(--green-2));
+  box-shadow:0 10px 25px rgba(16,185,129,.35);
+}
+
+/* Título */
+.osm__title{ color:var(--text); font-size:24px; font-weight:800; margin:6px 0 10px; letter-spacing:.2px; }
+
+/* Caja del número de pedido */
+.osm__orderbox{
+  background: linear-gradient(90deg, rgba(16,185,129,.12), rgba(5,150,105,.12));
+  border:1px solid rgba(16,185,129,.6);
+  border-radius:12px; padding:14px; margin:10px 0 16px;
+}
+.osm__orderbox-label{ color:var(--muted); font-size:12px; margin:0 0 4px; }
+.osm__orderbox-code{
+  color:#fff; font: 800 20px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; margin:0;
+}
+
+/* Lista de items */
+.osm__items-list{
+  background: rgba(21,93,252,.08);
+  border:1px solid rgba(21,93,252,.3);
+  border-radius:10px; padding:12px 14px; margin:12px 0 14px;
+  max-height:200px; overflow-y:auto;
+}
+.osm__items-title{
+  color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.5px;
+  margin:0 0 8px; font-weight:600;
+}
+.osm__items{
+  display:flex; flex-direction:column; gap:8px;
+}
+.osm__item{
+  display:flex; justify-content:space-between; align-items:flex-start;
+  gap:8px; padding:8px; border-radius:6px; background:rgba(255,255,255,.03);
+  border:1px solid rgba(21,93,252,.2);
+}
+.osm__item--free{
+  background:rgba(16,185,129,.12);
+  border-color:rgba(16,185,129,.4);
+}
+.osm__item-info{
+  flex:1; display:flex; flex-direction:column; gap:2px; text-align:left;
+}
+.osm__item-name{
+  color:#fff; font-size:12px; font-weight:600; display:flex; align-items:center; gap:4px;
+}
+.osm__free-badge{
+  display:inline-flex; align-items:center; gap:2px;
+  background:rgba(16,185,129,.3); color:#10b981; font-size:10px; font-weight:700;
+  padding:2px 6px; border-radius:3px; text-transform:uppercase; letter-spacing:.3px;
+}
+.osm__item-qty{
+  color:var(--muted); font-size:11px;
+}
+.osm__item-price{
+  color:#fff; font-size:12px; font-weight:700; white-space:nowrap;
+}
+.osm__item--free .osm__item-price{
+  color:#10b981;
+}
+
+/* Scroll personalizado para lista de items */
+.osm__items-list::-webkit-scrollbar{
+  width:4px;
+}
+.osm__items-list::-webkit-scrollbar-track{
+  background:transparent;
+}
+.osm__items-list::-webkit-scrollbar-thumb{
+  background:rgba(21,93,252,.3); border-radius:2px;
+}
+.osm__items-list::-webkit-scrollbar-thumb:hover{
+  background:rgba(21,93,252,.5);
+}
+
+/* Mensajes */
+.osm__msg{ color:var(--muted); font-size:14px; margin:0 0 10px; }
+.osm__timer{ color:var(--accent); font-size:12px; margin:0 0 16px; }
+
+/* Desglose de precios */
+.osm__pricing{
+  background: rgba(16,185,129,.08);
+  border:1px solid rgba(16,185,129,.3);
+  border-radius:10px; padding:12px 16px; margin:10px 0 16px;
+  font-size:14px;
+}
+.osm__price-row{
+  display:flex; justify-content:space-between; align-items:center;
+  color:var(--muted); margin:8px 0;
+}
+.osm__price-row span:last-child{ color:#fff; font-weight:600; }
+.osm__total-row{
+  border-top:1px solid rgba(16,185,129,.4); padding-top:10px; margin-top:10px;
+}
+.osm__total-row span{ color:var(--green-1); font-weight:700; font-size:15px; }
+.osm__total-row .strong{ color:var(--muted); font-weight:600; }
+
+/* Descuento con animación */
+.osm__discount-row{
+  display:flex; justify-content:space-between; align-items:center;
+  color:#f59e0b; font-weight:600; margin:10px 0;
+  padding:8px 0; border-bottom:1px solid rgba(245,158,11,.3);
+}
+.osm__discount-row .discount-value{
+  color:#f59e0b; font-weight:700;
+  animation: discount-pop .5s cubic-bezier(.2,.8,.2,1) 0.3s backwards;
+}
+
+@keyframes discount-pop{
+  0%{
+    opacity:0;
+    transform:translateY(-8px) scale(.8);
+  }
+  50%{
+    opacity:1;
+    transform:translateY(0) scale(1.05);
+  }
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+/* Acciones */
+.osm__actions{ display:flex; gap:10px; }
+.osm-btn{
+  width:100%; padding:10px 12px; border-radius:10px; font-weight:600; font-size:13px;
+  border:1px solid var(--border); cursor:pointer; transition: all .15s ease;
+}
+.osm-btn--ghost{
+  background:transparent; color:#fff;
+}
+.osm-btn--ghost:hover{ background:rgba(255,255,255,.06); }
+.osm-btn--success{
+  color:#fff; border-color:transparent;
+  background: linear-gradient(90deg, var(--green-1), var(--green-2));
+  box-shadow:0 10px 25px rgba(16,185,129,.3);
+}
+.osm-btn--success:hover{ filter:saturate(1.06); }
+.osm__arrow{ transform: translateX(0); transition: transform .15s ease; margin-left:6px; }
+.osm-btn--success:hover .osm__arrow{ transform: translateX(2px); }
+
+/* Animaciones */
+@keyframes osm-fade{ from{opacity:0} to{opacity:1} }
+@keyframes osm-pop{ from{opacity:0; transform:translateY(4px) scale(.98)} to{opacity:1; transform:translateY(0) scale(1)} }
+@keyframes osm-pulse{
+  0%,100%{ transform: scale(1); opacity:.8 }
+  50%{ transform: scale(1.06); opacity:1 }
+}
+
+/* Responsive */
+@media (max-width: 420px){
+  .osm__card{ padding:18px; border-radius:14px; }
+  .osm__title{ font-size:22px; }
+  .osm__orderbox-code{ font-size:18px; }
+}

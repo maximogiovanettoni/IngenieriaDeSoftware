@@ -1,0 +1,39 @@
+:root{
+  --card-bg: rgba(255,255,255,0.02);
+  --card-border: rgba(52,93,252,0.12);
+  --muted: #99a1af;
+}
+
+.adminBg{
+  min-height: 60vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+  background:transparent;
+}
+
+.card{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 1.25rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.errorAlert{
+  display:flex;
+  gap:0.5rem;
+  align-items:center;
+  padding:0.75rem;
+  border-radius:8px;
+  background: rgba(255,0,0,0.06);
+  color: #ffdede;
+}
+
+.errorIcon{
+  width:20px;
+  height:20px;
+  color:#ff6b6b;
+}

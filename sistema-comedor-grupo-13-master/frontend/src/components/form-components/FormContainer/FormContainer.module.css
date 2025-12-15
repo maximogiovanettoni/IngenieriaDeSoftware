@@ -1,0 +1,7 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  grid-template-columns: auto auto;
+  align-items: stretch;
+  gap: 1rem;
+}

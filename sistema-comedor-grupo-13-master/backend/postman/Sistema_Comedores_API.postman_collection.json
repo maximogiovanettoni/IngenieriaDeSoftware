@@ -1,0 +1,404 @@
+{
+	"info": {
+		"_postman_id": "sistema-comedores-api",
+		"name": "Sistema Comedores API",
+		"description": "Colección completa de endpoints para el Sistema de Comedores - FIUBA Grupo 13",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "sistema-comedores"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1 - User Management",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 or 409\", function () {",
+									"    pm.expect([201, 409]).to.include(pm.response.code);",
+									"});",
+									"",
+									"if (pm.response.code === 201) {",
+									"    pm.test(\"User registered successfully\", function () {",
+									"        pm.expect(pm.response.json()).to.have.property('success', true);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"email\": \"juan.perez@fi.uba.ar\",\n  \"password\": \"SecurePass123\",\n  \"age\": 25,\n  \"gender\": \"Hombre\",\n  \"address\": \"Av. Paseo Colón 850, CABA\",\n  \"role\": \"student\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Register a new user in the system"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2 - Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set(\"access_token\", response.accessToken);",
+									"    pm.environment.set(\"refresh_token\", response.refreshToken);",
+									"    ",
+									"    pm.test(\"Login successful\", function () {",
+									"        pm.expect(response).to.have.property('accessToken');",
+									"        pm.expect(response).to.have.property('refreshToken');",
+									"    });",
+									"} else {",
+									"    pm.test(\"Login failed with proper error\", function () {",
+									"        pm.expect([401]).to.include(pm.response.code);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"juan.perez@fi.uba.ar\",\n  \"password\": \"SecurePass123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/sessions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"sessions"
+							]
+						},
+						"description": "Authenticate user and get access tokens"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set(\"access_token\", response.accessToken);",
+									"    pm.environment.set(\"refresh_token\", response.refreshToken);",
+									"    ",
+									"    pm.test(\"Token refreshed successfully\", function () {",
+									"        pm.expect(response).to.have.property('accessToken');",
+									"        pm.expect(response).to.have.property('refreshToken');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/sessions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"sessions"
+							]
+						},
+						"description": "Refresh access token using refresh token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3 - Email Verification",
+			"item": [
+				{
+					"name": "Verify Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"your-verification-token-here\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/verify-email",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"verify-email"
+							]
+						},
+						"description": "Verify email address using verification token"
+					},
+					"response": []
+				},
+				{
+					"name": "Resend Verification Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/resend-verification?email=juan.perez@fi.uba.ar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"resend-verification"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "juan.perez@fi.uba.ar"
+								}
+							]
+						},
+						"description": "Resend verification email to user"
+					},
+					"response": []
+				},
+				{
+					"name": "Check Verification Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/verification-status?email=juan.perez@fi.uba.ar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"verification-status"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "juan.perez@fi.uba.ar"
+								}
+							]
+						},
+						"description": "Check if email is verified"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5 - Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "Get list of all products with optional filters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						},
+						"description": "Get specific product by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Coca Cola 500ml - Edición Especial\",\n  \"price\": 275.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						},
+						"description": "Update existing product (partial update)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6 - Configuration",
+			"item": [
+				{
+					"name": "Get Validation Config",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/config/validation",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"config",
+								"validation"
+							]
+						},
+						"description": "Get validation configuration settings"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

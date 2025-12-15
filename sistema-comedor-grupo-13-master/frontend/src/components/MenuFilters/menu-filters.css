@@ -1,0 +1,80 @@
+:root{
+  --bg:#1a1a1a; --panel:#2a2a2a; --panel-2:#141414;
+  --text:#fff; --muted:#99a1af; --border:#4a5565;
+  --accent:#51a2ff; --blue-1:#155dfc; --blue-2:#2b7fff;
+}
+
+.mf{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:24px;
+}
+
+.mf__block{ margin-bottom:14px; }
+.mf__section-title{
+  color:var(--muted);
+  font-size:12px; font-weight:700; letter-spacing:.04em;
+  text-transform:uppercase;
+  margin:0 0 10px;
+}
+
+/* Chips de categorías */
+.mf__chips{
+  display:flex; flex-wrap:wrap; gap:8px;
+  /* scroll horizontal suave en móviles */
+  overflow:auto; padding-bottom:4px;
+  scrollbar-width:thin;
+}
+.mf-chip{
+  appearance:none; border:1px solid var(--border);
+  background:rgba(38,38,38,.3);
+  color:var(--muted);
+  padding:8px 14px; border-radius:999px;
+  font-size:13px; font-weight:600; cursor:pointer;
+  transition: border-color .15s ease, background .15s ease, color .15s ease, transform .1s ease;
+  white-space:nowrap;
+}
+.mf-chip:hover{ border-color:var(--accent); }
+.mf-chip.is-active{
+  background:linear-gradient(90deg, var(--blue-1), var(--blue-2));
+  color:#fff; border-color:transparent;
+  transform:translateY(-1px);
+}
+
+/* Search */
+.mf__search{ position:relative; }
+.mf-input{
+  width:100%;
+  background:rgba(38,38,38,.5);
+  border:1px solid var(--border);
+  color:#fff; padding:10px 40px 10px 40px;
+  border-radius:10px; font-size:14px; outline:none;
+  transition:border-color .15s ease, background .15s ease;
+}
+.mf-input::placeholder{ color:var(--muted); }
+.mf-input:focus{ border-color:var(--accent); background:rgba(38,38,38,.6); }
+
+.mf__icon{
+  position:absolute; top:50%; transform:translateY(-50%);
+  color:var(--muted);
+}
+.mf__icon--left{ left:12px; }
+
+.mf__clear{
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  background:transparent; border:0; color:var(--muted); cursor:pointer;
+  padding:4px; border-radius:8px; transition:color .15s ease, background .15s ease;
+}
+.mf__clear:hover{ color:#fff; background:rgba(255,255,255,.05); }
+
+/* Count */
+.mf__count{
+  margin:6px 0 0; font-size:12px; color:var(--accent); font-weight:600;
+}
+
+/* Dark scrollbar fino (navegadores que soporten) */
+.mf__chips::-webkit-scrollbar{ height:6px }
+.mf__chips::-webkit-scrollbar-thumb{ background:var(--border); border-radius:999px }
+.mf__chips::-webkit-scrollbar-track{ background:transparent }

@@ -1,0 +1,57 @@
+:root{
+  --panel:#2a2a2a; --panel-2:#1a1a1a; --border:#4a5565;
+  --text:#fff; --muted:#99a1af;
+  --blue-1:#155dfc; --blue-2:#2b7fff; --accent:#51a2ff;
+}
+
+.ocm{
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  padding:16px; z-index:50;
+}
+.ocm__backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.5);
+  animation: ocm-fade .15s ease-out;
+}
+.ocm__card{
+  position:relative; width:100%; max-width:520px; max-height:90vh; overflow:auto;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:14px; padding:18px;
+  animation: ocm-pop .18s ease-out;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+/* Header */
+.ocm__header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.ocm__title-wrap{ display:flex; align-items:center; gap:10px; }
+.ocm__title-icon{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border-radius:999px;
+  color:#fff; background:linear-gradient(135deg, var(--blue-1), var(--blue-2));
+  box-shadow:0 8px 18px rgba(21,93,252,.25);
+}
+.ocm__title{ color:var(--text); font-size:18px; font-weight:700; margin:0; }
+.ocm__close{
+  appearance:none; border:0; background:transparent; color:var(--muted);
+  padding:6px; border-radius:8px; cursor:pointer;
+  transition: color .15s ease, background .15s ease, transform .08s ease;
+}
+.ocm__close:hover{ color:#fff; background:rgba(255,255,255,.06); }
+.ocm__close:active{ transform:scale(.98); }
+
+/* Summary */
+.ocm__summary{ background:rgba(38,38,38,.35); padding:12px; border-radius:12px; margin:12px 0 16px; }
+.ocm__summary-title{ color:#fff; font-size:13px; font-weight:700; margin:0 0 8px; }
+.ocm__items{ max-height:260px; overflow:auto; display:flex; flex-direction:column; gap:8px; }
+
+.ocm-item{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.ocm-item__info{ min-width:0; }
+.ocm-item__name{ color:#fff; font-size:13px; margin:0; }
+.ocm-item__qty{ color:var(--muted); font-size:12px; margin:2px 0 0; }
+.ocm-item__amount{ color:var(--accent); font-weight:700; font-size:13px; margin:0; }
+.ocm__empty{ color:var(--muted); font-size:12px; text-align:center; padding:8px 0; }
+
+/* Total */
+.ocm__total{ background:rgba(21,93,252,.12); border:1px solid rgba(21,93,252,.3); border-radius:10px; padding:12px; margin:16px 0; text-align:center; }
+.ocm__total-label{ color:var(--muted); font-size:12px; margin:0; }
+.ocm__total-value{ color:#fff; font-size:24px; font-weight:800; margin:4px 0 0; }
+.ocm__total-note{ color:var(--muted); font-size:11px; margin:6px 0 0; font-style:italic; }

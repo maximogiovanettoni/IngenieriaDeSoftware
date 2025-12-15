@@ -1,0 +1,86 @@
+{
+  "app": {
+    "name": "Sistema Comedor",
+    "version": "1.0.0",
+    "description": "Sistema de gestión de comedor universitario"
+  },
+  "validation": {
+    "email": {
+      "allowed-domain": "fi.uba.ar",
+      "domain-pattern": "^[a-zA-Z0-9._%+-]+@fi\\.uba\\.ar$",
+      "messages": {
+        "required": "El email es requerido",
+        "invalid-format": "Formato de email inválido",
+        "invalid-domain": "El email debe ser del dominio fi.uba.ar"
+      }
+    },
+    "user": {
+      "age": {
+        "min": 0,
+        "max": 99,
+        "messages": {
+          "required": "La edad es requerida",
+          "invalid-format": "La edad debe ser un número válido",
+          "invalid-range": "La edad debe estar entre 0 y 99 años"
+        }
+      },
+      "first-name": {
+        "min-length": 2,
+        "max-length": 50,
+        "pattern": "^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$",
+        "messages": {
+          "required": "El nombre es requerido",
+          "invalid-format": "El nombre debe contener solo letras",
+          "invalid-length": "El nombre debe tener entre 2 y 50 caracteres"
+        }
+      },
+      "last-name": {
+        "min-length": 2,
+        "max-length": 50,
+        "pattern": "^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$",
+        "messages": {
+          "required": "El apellido es requerido",
+          "invalid-format": "El apellido debe contener solo letras",
+          "invalid-length": "El apellido debe tener entre 2 y 50 caracteres"
+        }
+      },
+      "password": {
+        "min-length": 8,
+        "require-uppercase": true,
+        "require-lowercase": true,
+        "require-digit": true,
+        "require-special": false,
+        "messages": {
+          "required": "La contraseña es requerida",
+          "invalid-format": "La contraseña debe contener mayúsculas, minúsculas y números",
+          "invalid-length": "La contraseña debe tener al menos 8 caracteres"
+        }
+      },
+      "address": {
+        "max-length": 100,
+        "pattern": "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s,.-]+$",
+        "messages": {
+          "required": "La dirección es requerida",
+          "invalid-format": "La dirección contiene caracteres inválidos",
+          "invalid-length": "La dirección no debe exceder los 100 caracteres"
+        }
+      },
+      "gender": {
+        "allowed-values": ["male", "female", "other"],
+        "messages": {
+          "required": "El género es requerido",
+          "invalid-format": "El género debe ser uno de: masculino, femenino, otro",
+          "invalid-value": "El género debe ser masculino, femenino u otro"
+        }
+      }
+    }
+  },
+  "urls": {
+    "base-url": "http://localhost:21300",
+    "api": {
+      "base": "/api/v1",
+      "auth": "/auth",
+      "users": "/users"
+    }
+  }
+}

@@ -1,0 +1,755 @@
+import { useState, useEffect, useCallback } from 'react';
+import { Plus, Trash2, Search, AlertCircle, Loader2, ArrowLeft, Edit, Check, X } from 'lucide-react';
+import { promotionAPI, Promotion } from '@/services/PromotionAPI';
+import { useToken } from '@/services/TokenContext';
+import { useLocation } from 'wouter';
+import './promotions-screen.css';
+
+type ModalType = "create" | "editDetails" | "delete" | "toggleActive" | null;
+
+interface FormData {
+  name: string;
+  description: string;
+  active: boolean;
+  startDate: string;
+  endDate: string;
+  type: string;
+  category: string;
+  discount: number;
+  minimumPurchase: number;
+  discountAmount: number;
+  requiredCategory: string;
+  freeCategory: string;
+  requiredQuantity: number;
+  chargedQuantity: number;
+  applicableDays: string[];
+}
+
+const INITIAL_FORM_DATA: FormData = {
+  name: '',
+  description: '',
+  active: true,
+  startDate: '',
+  endDate: '',
+  type: 'PERCENTAGE_DISCOUNT',
+  category: 'SANDWICH',
+  discount: 0,
+  minimumPurchase: 0,
+  discountAmount: 0,
+  requiredCategory: 'SANDWICH',
+  freeCategory: 'BEVERAGE',
+  requiredQuantity: 3,
+  chargedQuantity: 2,
+  applicableDays: [],
+};
+
+const CATEGORIES = [
+  { value: 'SANDWICH', label: 'Sándwich' },
+  { value: 'DRINK', label: 'Bebida' },
+  { value: 'DESSERT', label: 'Postre' },
+  { value: 'SALAD', label: 'Ensalada' },
+  { value: 'MAIN_COURSE', label: 'Plato Principal' },
+  { value: 'COMBO', label: 'Combo' },
+  { value: 'SIDE_DISH', label: 'Acompañamiento' },
+  { value: 'COFFEE', label: 'Café' },
+];
+
+const DAYS = [
+  { es: 'Lunes', en: 'MONDAY' },
+  { es: 'Martes', en: 'TUESDAY' },
+  { es: 'Miércoles', en: 'WEDNESDAY' },
+  { es: 'Jueves', en: 'THURSDAY' },
+  { es: 'Viernes', en: 'FRIDAY' },
+  { es: 'Sábado', en: 'SATURDAY' },
+  { es: 'Domingo', en: 'SUNDAY' }
+];
+
+export const PromotionsScreen = () => {
+  const [, setLocation] = useLocation();
+  const [tokenState] = useToken();
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const [modalType, setModalType] = useState<ModalType>(null);
+  const [selectedPromotion, setSelectedPromotion] = useState<Promotion | null>(null);
+  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
+  const [formLoading, setFormLoading] = useState(false);
+
+  const token = tokenState.state === 'LOGGED_IN' ? tokenState.tokens.accessToken : undefined;
+
+  const closeModal = () => {
+    setModalType(null);
+    setSelectedPromotion(null);
+    setFormData(INITIAL_FORM_DATA);
+  };
+
+  const loadPromotions = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await promotionAPI.getAllPromotions(token);
+      setPromotions(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error cargando promociones');
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    loadPromotions();
+  }, [loadPromotions]);
+
+  const handleCreateClick = () => {
+    setSelectedPromotion(null);
+    setFormData(INITIAL_FORM_DATA);
+    setModalType('create');
+  };
+
+  const handleEditClick = (promotion: Promotion) => {
+    console.log('handleEditClick called with promotion:', promotion);
+    setSelectedPromotion(promotion);
+    setFormData({
+      name: promotion.name,
+      description: promotion.description || '',
+      active: promotion.active,
+      startDate: promotion.startDate || '',
+      endDate: promotion.endDate || '',
+      type: promotion.type,
+      category: promotion.category || 'SANDWICH',
+      discount: (promotion.multiplier || 0) * 100,
+      minimumPurchase: promotion.minimumPurchase || 0,
+      discountAmount: promotion.discountAmount || 0,
+      requiredCategory: promotion.requiredCategory || 'SANDWICH',
+      freeCategory: promotion.freeCategory || 'BEVERAGE',
+      requiredQuantity: promotion.requiredQuantity || 3,
+      chargedQuantity: promotion.chargedQuantity || 2,
+      applicableDays: promotion.applicableDays || [],
+    });
+    setModalType('editDetails');
+  };
+
+  const handleDeleteClick = (promotion: Promotion) => {
+    console.log('handleDeleteClick called with promotion:', promotion);
+    setSelectedPromotion(promotion);
+    setModalType('delete');
+  };
+
+  const handleToggleActiveClick = (promotion: Promotion) => {
+    console.log('handleToggleActiveClick called with promotion:', promotion);
+    setSelectedPromotion(promotion);
+    setModalType('toggleActive');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!token) {
+      setError('No estás autenticado');
+      return;
+    }
+
+    try {
+      setFormLoading(true);
+      const promotionData = {
+        name: formData.name,
+        description: formData.description,
+        active: formData.active,
+        startDate: formData.startDate || null,
+        endDate: formData.endDate || null,
+        applicableDays: formData.applicableDays && formData.applicableDays.length > 0 ? formData.applicableDays : [],
+        type: formData.type,
+        ...(formData.type === 'PERCENTAGE_DISCOUNT' && {
+          category: formData.category,
+          discount: Math.round(formData.discount),
+        }),
+        ...(formData.type === 'FIXED_DISCOUNT' && {
+          minimumPurchase: parseFloat(String(formData.minimumPurchase)),
+          discountAmount: parseFloat(String(formData.discountAmount)),
+        }),
+        ...(formData.type === 'BUY_X_GET_Y' && {
+          requiredProductCategory: formData.requiredCategory,
+          freeProductCategory: formData.freeCategory,
+        }),
+        ...(formData.type === 'BUY_X_PAY_Y' && {
+          category: formData.category,
+          requiredQuantity: parseInt(String(formData.requiredQuantity)),
+          chargedQuantity: parseInt(String(formData.chargedQuantity)),
+        }),
+      };
+
+      if (selectedPromotion) {
+        await promotionAPI.updatePromotion(selectedPromotion.id, promotionData, token);
+        setSuccessMessage('Promoción actualizada exitosamente');
+      } else {
+        await promotionAPI.createPromotion(promotionData, token);
+        setSuccessMessage('Promoción creada exitosamente');
+      }
+
+      closeModal();
+      await loadPromotions();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error guardando promoción');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!token || !selectedPromotion) return;
+
+    try {
+      setFormLoading(true);
+      await promotionAPI.deletePromotion(selectedPromotion.id, token);
+      setSuccessMessage('Promoción eliminada exitosamente');
+      closeModal();
+      await loadPromotions();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error eliminando promoción');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleConfirmToggleActive = async () => {
+    if (!token || !selectedPromotion) return;
+
+    try {
+      setFormLoading(true);
+      if (selectedPromotion.active) {
+        await promotionAPI.deactivatePromotion(selectedPromotion.id, token);
+      } else {
+        await promotionAPI.activatePromotion(selectedPromotion.id, token);
+      }
+      setSuccessMessage(
+        selectedPromotion.active ? 'Promoción desactivada' : 'Promoción activada'
+      );
+      closeModal();
+      await loadPromotions();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error actualizando promoción');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const filteredPromotions = promotions.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="admin-screen">
+      <div className="admin-header">
+        <button
+          className="back-btn"
+          onClick={() => setLocation('/admin')}
+          title="Volver"
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <h1>Gestión de Promociones</h1>
+      </div>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div
+          className="alert alert--success"
+          style={{ marginBottom: '1rem' }}
+        >
+          <Check size={18} />
+          <span>{successMessage}</span>
+          <button
+            className="alert__close"
+            onClick={() => setSuccessMessage(null)}
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
+      {/* Error Alert */}
+      {error && (
+        <div className="alert alert--error" style={{ marginBottom: '1rem' }}>
+          <AlertCircle size={18} />
+          <span>{error}</span>
+          <button className="alert__close" onClick={() => setError(null)}>
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
+      {/* Search and Add Button */}
+      <div className="admin-controls">
+        <div className="search-box">
+          <Search size={18} />
+          <input
+            type="text"
+            placeholder="Buscar promoción..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <button className="btn btn--primary" onClick={handleCreateClick}>
+          <Plus size={18} />
+          Nueva Promoción
+        </button>
+      </div>
+
+      {/* Promotions Table */}
+      {loading ? (
+        <div className="loading-container">
+          <Loader2 className="spinner" size={32} />
+          <p>Cargando promociones...</p>
+        </div>
+      ) : filteredPromotions.length === 0 ? (
+        <div className="empty-state">
+          <p>No hay promociones disponibles</p>
+        </div>
+      ) : (
+        <div className="table__scroll">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Tipo</th>
+                <th>Válido Desde</th>
+                <th>Válido Hasta</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPromotions.map((promotion) => (
+                <tr key={promotion.id}>
+                  <td className="font-bold">{promotion.name}</td>
+                  <td className="muted">{promotion.description || '-'}</td>
+                  <td>
+                    <span className="badge">
+                      {promotion.type.replace(/_/g, ' ')}
+                    </span>
+                  </td>
+                  <td className="muted small">
+                    {promotion.startDate || '-'}
+                  </td>
+                  <td className="muted small">
+                    {promotion.endDate || '-'}
+                  </td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        promotion.active
+                          ? 'badge--success'
+                          : 'badge--disabled'
+                      }`}
+                    >
+                      {promotion.active ? 'Activo' : 'Inactivo'}
+                    </span>
+                  </td>
+                  <td className="actions">
+                    <button
+                      className="icon-btn icon-btn--info"
+                      onClick={() => handleEditClick(promotion)}
+                      title="Editar"
+                    >
+                      <Edit size={16} />
+                    </button>
+                    <button
+                      className={`icon-btn ${
+                        promotion.active
+                          ? 'icon-btn--warning'
+                          : 'icon-btn--success'
+                      }`}
+                      onClick={() => handleToggleActiveClick(promotion)}
+                      title={
+                        promotion.active ? 'Desactivar' : 'Activar'
+                      }
+                    >
+                      {promotion.active ? (
+                        <X size={16} />
+                      ) : (
+                        <Check size={16} />
+                      )}
+                    </button>
+                    <button
+                      className="icon-btn icon-btn--danger"
+                      onClick={() => handleDeleteClick(promotion)}
+                      title="Eliminar"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Modal: Create/Edit Promotion */}
+      {modalType === 'create' || modalType === 'editDetails' ? (
+        <div className="modal">
+          <div className="modal__backdrop" onClick={closeModal} />
+          <div className="modal__card">
+            <h2 className="modal__title">
+              {selectedPromotion ? 'Editar Promoción' : 'Nueva Promoción'}
+            </h2>
+
+            <form onSubmit={handleSubmit} className="form">
+              <div className="field">
+                <label htmlFor="name">Nombre *</label>
+                <input
+                  id="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  required
+                  placeholder="Ej: Descuento de sandwiches"
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="description">Descripción</label>
+                <textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      description: e.target.value,
+                    })
+                  }
+                  placeholder="Ej: 20% de descuento en todos los sandwiches los martes"
+                  rows={3}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="field">
+                  <label htmlFor="type">Tipo de Promoción *</label>
+                  <select
+                    id="type"
+                    value={formData.type}
+                    onChange={(e) =>
+                      setFormData({ ...formData, type: e.target.value })
+                    }
+                  >
+                    <option value="PERCENTAGE_DISCOUNT">
+                      Descuento Porcentual
+                    </option>
+                    <option value="FIXED_DISCOUNT">Descuento Fijo</option>
+                    <option value="BUY_X_GET_Y">
+                      Compra X Lleva Y
+                    </option>
+                    <option value="BUY_X_PAY_Y">Compra X Paga Y</option>
+                  </select>
+                </div>
+
+                <div className="field">
+                  <label htmlFor="active" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1.75rem' }}>
+                    <input
+                      id="active"
+                      type="checkbox"
+                      checked={formData.active}
+                      onChange={(e) =>
+                        setFormData({ ...formData, active: e.target.checked })
+                      }
+                    />
+                    ¿Activo?
+                  </label>
+                </div>
+              </div>
+
+              {/* Type-specific fields */}
+              {formData.type === 'PERCENTAGE_DISCOUNT' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="field">
+                    <label htmlFor="category">Categoría *</label>
+                    <select
+                      id="category"
+                      value={formData.category}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
+                    >
+                      {CATEGORIES.map(cat => (
+                        <option key={cat.value} value={cat.value}>{cat.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="discount">Porcentaje de Descuento (%) *</label>
+                    <input
+                      id="discount"
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={formData.discount}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          discount: parseInt(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              )}
+
+              {formData.type === 'FIXED_DISCOUNT' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="field">
+                    <label htmlFor="minimumPurchase">Compra Mínima ($) *</label>
+                    <input
+                      id="minimumPurchase"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formData.minimumPurchase}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          minimumPurchase: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="discountAmount">Monto de Descuento ($) *</label>
+                    <input
+                      id="discountAmount"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formData.discountAmount}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          discountAmount: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              )}
+
+              {formData.type === 'BUY_X_GET_Y' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div className="field">
+                    <label htmlFor="requiredCategory">Categoría Requerida *</label>
+                    <select
+                      id="requiredCategory"
+                      value={formData.requiredCategory}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          requiredCategory: e.target.value,
+                        })
+                      }
+                    >
+                      {CATEGORIES.map(cat => (
+                        <option key={cat.value} value={cat.value}>{cat.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="freeCategory">Categoría Gratis *</label>
+                    <select
+                      id="freeCategory"
+                      value={formData.freeCategory}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          freeCategory: e.target.value,
+                        })
+                      }
+                    >
+                      {CATEGORIES.map(cat => (
+                        <option key={cat.value} value={cat.value}>{cat.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {formData.type === 'BUY_X_PAY_Y' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                  <div className="field">
+                    <label htmlFor="categoryBXPY">Categoría *</label>
+                    <select
+                      id="categoryBXPY"
+                      value={formData.category}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
+                    >
+                      {CATEGORIES.map(cat => (
+                        <option key={cat.value} value={cat.value}>{cat.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="requiredQuantity">Cantidad Requerida *</label>
+                    <input
+                      id="requiredQuantity"
+                      type="number"
+                      min="1"
+                      value={formData.requiredQuantity}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          requiredQuantity: parseInt(e.target.value) || 1,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="chargedQuantity">Cantidad a Pagar *</label>
+                    <input
+                      id="chargedQuantity"
+                      type="number"
+                      min="1"
+                      value={formData.chargedQuantity}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          chargedQuantity: parseInt(e.target.value) || 1,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="field">
+                  <label htmlFor="startDate">Fecha Inicio</label>
+                  <input
+                    id="startDate"
+                    type="date"
+                    value={formData.startDate}
+                    onChange={(e) =>
+                      setFormData({ ...formData, startDate: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="field">
+                  <label htmlFor="endDate">Fecha Fin</label>
+                  <input
+                    id="endDate"
+                    type="date"
+                    value={formData.endDate}
+                    onChange={(e) =>
+                      setFormData({ ...formData, endDate: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="field">
+                <label>Días Aplicables</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  {DAYS.map((day) => (
+                    <label key={day.en} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem' }}>
+                      <input
+                        type="checkbox"
+                        checked={formData.applicableDays.includes(day.en)}
+                        onChange={(e) => {
+                          const newDays = e.target.checked
+                            ? [...formData.applicableDays, day.en]
+                            : formData.applicableDays.filter(d => d !== day.en);
+                          setFormData({ ...formData, applicableDays: newDays });
+                        }}
+                      />
+                      {day.es}
+                    </label>
+                  ))}
+                </div>
+                <div className="field__hint">
+                  Déjalo vacío si aplica todos los días
+                </div>
+              </div>
+
+              <div className="modal__actions">
+                <button
+                  type="button"
+                  className="btn btn--secondary"
+                  onClick={closeModal}
+                >
+                  Cancelar
+                </button>
+                <button type="submit" className="btn btn--primary" disabled={formLoading}>
+                  {formLoading ? 'Guardando...' : (selectedPromotion ? 'Actualizar' : 'Crear')} Promoción
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Modal: Delete Confirmation */}
+      {modalType === 'delete' && selectedPromotion ? (
+        <div className="modal">
+          <div className="modal__backdrop" onClick={closeModal} />
+          <div className="modal__card">
+            <h2 className="modal__title">Eliminar Promoción</h2>
+            <p style={{ marginBottom: '1.5rem', color: 'var(--muted)' }}>
+              ¿Estás seguro de que deseas eliminar la promoción <strong>"{selectedPromotion.name}"</strong>? Esta acción no se puede deshacer.
+            </p>
+            <div className="modal__actions">
+              <button
+                className="btn btn--secondary"
+                onClick={closeModal}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn btn--danger"
+                onClick={handleConfirmDelete}
+                disabled={formLoading}
+              >
+                {formLoading ? 'Eliminando...' : 'Eliminar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Modal: Toggle Active Confirmation */}
+      {modalType === 'toggleActive' && selectedPromotion ? (
+        <div className="modal">
+          <div className="modal__backdrop" onClick={closeModal} />
+          <div className="modal__card">
+            <h2 className="modal__title">
+              {selectedPromotion.active ? 'Desactivar' : 'Activar'} Promoción
+            </h2>
+            <p style={{ marginBottom: '1.5rem', color: 'var(--muted)' }}>
+              ¿Deseas {selectedPromotion.active ? 'desactivar' : 'activar'} la promoción <strong>"{selectedPromotion.name}"</strong>?
+            </p>
+            <div className="modal__actions">
+              <button
+                className="btn btn--secondary"
+                onClick={closeModal}
+              >
+                Cancelar
+              </button>
+              <button
+                className={`btn ${selectedPromotion.active ? 'btn--warning' : 'btn--success'}`}
+                onClick={handleConfirmToggleActive}
+                disabled={formLoading}
+              >
+                {formLoading ? 'Actualizando...' : (selectedPromotion.active ? 'Desactivar' : 'Activar')}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+};

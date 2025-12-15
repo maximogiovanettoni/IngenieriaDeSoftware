@@ -1,0 +1,72 @@
+:root{
+  --bg:#1a1a1a;
+  --panel:#2a2a2a;
+  --border:#4a5565;
+  --muted:#99a1af;
+  --text:#fff;
+  --accent:#51a2ff;
+  --blue-1:#155dfc;
+  --blue-2:#2b7fff;
+  --shadow-1:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);
+}
+
+.ft{
+  background: linear-gradient(180deg, var(--panel) 0%, var(--bg) 100%);
+  border-top:1px solid var(--border);
+  margin-top: 32px;
+  color: var(--text);
+}
+.ft__inner{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 16px;
+
+  display: flex;
+  justify-content: space-between;   /* reparte hasta las puntas */
+  align-items: flex-start;
+  gap: 24px;
+}
+@media (max-width: 960px){
+  .ft__inner{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px){
+  .ft__inner{ grid-template-columns: 1fr; padding: 22px 14px; }
+}
+
+.ft__col{ min-width: 0; }
+
+.ft__brand{ display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.ft__logo{
+  width:44px; height:44px; border-radius:50%;
+  display:grid; place-items:center;
+  background:#4f46e5; box-shadow:0 4px 18px #4f46e580;
+  font-size:22px;
+}
+.ft__brandText{ display:flex; flex-direction:column; gap:2px; }
+.ft__title{ margin:0; font-weight:800; letter-spacing:.2px; }
+.ft__subtitle{ margin:0; font-size:12px; color:var(--muted); }
+.ft__desc{ margin:8px 0 0; color:var(--muted); font-size:13px; }
+
+.ft__heading{
+  margin:0 0 10px; font-size:13px; letter-spacing:.6px;
+  color:var(--muted); text-transform:uppercase;
+}
+.ft__links{ list-style:none; margin:0; padding:0; display:grid; gap:8px; }
+.ft__link{
+  background:transparent; border:0; color:#fff; text-align:left;
+  padding:0; cursor:pointer; font-size:14px;
+}
+.ft__link:hover{ color: var(--accent); }
+
+
+.ft__bottom{
+  border-top:1px solid var(--border);
+  padding:12px 16px;
+  max-width:1200px; margin:0 auto;
+  display:flex; justify-content:space-between; gap:8px;
+  color:var(--muted); font-size:12px;
+}
+@media (max-width:560px){
+  .ft__bottom{ flex-direction:column; align-items:flex-start; gap:4px; }
+}
+.ft__tiny{ opacity:.85; }

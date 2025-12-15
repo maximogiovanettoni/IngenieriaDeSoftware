@@ -1,0 +1,492 @@
+validation:
+  email:
+    messages:
+      required: El email es requerido
+      invalid-format: Formato de email inválido
+      invalid-domain: El email debe ser del dominio fi.uba.ar
+  user:
+    birth-date:
+      messages:
+        required: La fecha de nacimiento es requerida
+        invalid-format: La fecha de nacimiento debe tener formato válido (dd-mm-aaaa)
+        invalid-range: La edad debe estar entre 18 y 99 años
+        past: La fecha de nacimiento debe ser en el pasado
+    first-name:
+      messages:
+        required: El nombre es requerido
+        invalid-format: El nombre debe contener solo letras
+        invalid-length: El nombre debe tener entre 2 y 50 caracteres
+    last-name:
+      messages:
+        required: El apellido es requerido
+        invalid-format: El apellido debe contener solo letras
+        invalid-length: El apellido debe tener entre 2 y 50 caracteres
+    password:
+      messages:
+        required: La contraseña es requerida
+        invalid-format: La contraseña debe contener al menos una mayúscula, una minúscula y un número
+        invalid-length: La contraseña debe tener entre 8 y 64 caracteres
+        reset-token: Se requiere un token de autenticación para resetear la contraseña
+    address:
+      messages:
+        required: La dirección es requerida
+        invalid-format: La dirección contiene caracteres inválidos
+        invalid-length: La dirección no debe exceder los 100 caracteres
+    gender:
+      messages:
+        required: El género es requerido
+        invalid-format: "El género debe ser uno de: masculino, femenino, otro"
+        invalid-value: El género debe ser masculino, femenino u otro
+
+messages:
+  profile:
+    updated-correctly: Perfil actualizado correctamente
+  auth:
+    email-already-verified: El email ya está verificado
+    email-not-verified: El email del usuario no está verificado
+    email-verification-success: Email verificado exitosamente
+    email-verification-sent: Email de verificación enviado
+    user-not-found: Usuario no encontrado
+    user-created-success: Usuario registrado exitosamente. Por favor verifica tu email.
+    invalid-credentials: Credenciales inválidas
+  email:
+    verification-subject: Verifica tu cuenta
+    verification-sent: Email de verificación enviado exitosamente
+    send-failed: Error al enviar email de verificación
+  token:
+    refresh:
+      expired: El token de refresh ha expirado. Por favor inicia sesión nuevamente
+      invalid: Token de refresh inválido
+      not-found: Token de refresh no encontrado
+      revoked: El token de refresh ha sido revocado
+      success: Token renovado exitosamente
+    email-verification:
+      expired: El token de verificación de email ha expirado. Por favor solicita un nuevo email de verificación
+      invalid: Token de verificación de email inválido
+      not-found: Token de verificación no encontrado
+      already-used: Este token de verificación ya fue utilizado
+      sent: Email de verificación enviado exitosamente
+      resent: Email de verificación reenviado exitosamente
+    password-reset:
+      expired: El token de reseteo de contraseña ha expirado. Por favor solicita uno nuevo
+      invalid: Token de reseteo de contraseña inválido
+      not-found: Token de reseteo no encontrado
+      already-used: Este token de reseteo ya fue utilizado
+      sent: Email de reseteo de contraseña enviado exitosamente
+      success: Contraseña reseteada exitosamente
+
+ingredients:
+  items:
+    - name: Tomate
+      unitMeasure: kg
+      stock: 10
+      active: true
+      available: true
+    - name: Lechuga
+      unitMeasure: kg
+      stock: 10
+      active: true
+      available: true
+    - name: Hamburguesa
+      unitMeasure: kg
+      stock: 15
+      active: true
+      available: true
+    - name: Pan de Hamburguesa
+      unitMeasure: unidades
+      stock: 50
+      active: true
+      available: true
+    - name: Mayonesa
+      unitMeasure: litros
+      stock: 7
+      active: true
+      available: true
+    - name: Ketchup
+      unitMeasure: litros
+      stock: 6
+      active: true
+      available: true
+    - name: Harina Leudante
+      unitMeasure: kg
+      stock: 5
+      active: true
+      available: true
+    - name: Queso Mozzarella
+      unitMeasure: kg
+      stock: 8
+      active: true
+      available: true
+    - name: Salsa de Tomate
+      unitMeasure: litros
+      stock: 10
+      active: true
+      available: true
+
+products:
+  simple:
+    - name: Coca Cola 500ml
+      description: Bebida gaseosa sabor cola
+      price: 1500.00
+      category: Bebida
+      active: true
+      stock: 100
+      imageSrc: coca-cola.png
+
+    - name: Agua Mineral 500ml
+      description: Agua mineral sin gas
+      price: 800.00
+      category: Bebida
+      active: true
+      stock: 150
+      imageSrc: agua.png
+
+    - name: Jugo de Naranja 500ml
+      description: Jugo natural de naranja exprimida
+      price: 1200.00
+      category: Bebida
+      active: true
+      stock: 80
+      imageSrc: jugo-naranja.png
+
+    - name: Café Americano
+      description: Café negro estilo americano
+      price: 900.00
+      category: Café
+      active: true
+      stock: 200
+      imageSrc: cafe.png
+
+    - name: Alfajor de Chocolate
+      description: Alfajor relleno con dulce de leche y bañado en chocolate
+      price: 900.00
+      category: Postre
+      active: true
+      stock: 60
+      imageSrc: alfajor.png
+
+    - name: Brownie
+      description: Brownie de chocolate con nueces
+      price: 1100.00
+      category: Postre
+      active: true
+      stock: 40
+      imageSrc: brownie.png
+
+    - name: Ensalada de Frutas
+      description: Mix de frutas frescas de estación
+      price: 1300.00
+      category: Postre
+      active: true
+      stock: 30
+      imageSrc: ensalada-frutas.png
+
+  elaborate:
+    - name: Hamburguesa Completa
+      description: Hamburguesa de carne con lechuga, tomate, mayonesa y ketchup
+      price: 3500.00
+      category: Hamburguesa
+      active: true
+      imageSrc: hamburguesa.png
+      ingredients:
+        - ingredientName: Pan de Hamburguesa
+          quantity: 1
+        - ingredientName: Hamburguesa
+          quantity: 0.15
+        - ingredientName: Lechuga
+          quantity: 0.03
+        - ingredientName: Tomate
+          quantity: 0.05
+        - ingredientName: Mayonesa
+          quantity: 0.02
+        - ingredientName: Ketchup
+          quantity: 0.02
+
+    - name: Pizza Mozzarella
+      description: Pizza con salsa de tomate y queso mozzarella
+      price: 4000.00
+      category: Pizza
+      active: true
+      imageSrc: pizza.png
+      ingredients:
+        - ingredientName: Harina Leudante
+          quantity: 0.25
+        - ingredientName: Salsa de Tomate
+          quantity: 0.1
+        - ingredientName: Queso Mozzarella
+          quantity: 0.2
+
+    - name: Hamburguesa con Queso
+      description: Hamburguesa de carne con queso mozzarella derretido
+      price: 4000.00
+      category: Hamburguesa
+      active: true
+      imageSrc: hamburguesa-queso.png
+      ingredients:
+        - ingredientName: Pan de Hamburguesa
+          quantity: 1
+        - ingredientName: Hamburguesa
+          quantity: 0.15
+        - ingredientName: Queso Mozzarella
+          quantity: 0.05
+        - ingredientName: Lechuga
+          quantity: 0.03
+        - ingredientName: Tomate
+          quantity: 0.05
+        - ingredientName: Mayonesa
+          quantity: 0.02
+
+    - name: Pizza Napolitana
+      description: Pizza con salsa, mozzarella y tomate fresco
+      price: 4500.00
+      category: Pizza
+      active: true
+      imageSrc: pizza-napolitana.png
+      ingredients:
+        - ingredientName: Harina Leudante
+          quantity: 0.25
+        - ingredientName: Salsa de Tomate
+          quantity: 0.1
+        - ingredientName: Queso Mozzarella
+          quantity: 0.2
+        - ingredientName: Tomate
+          quantity: 0.1
+
+    - name: Ensalada César
+      description: Ensalada con lechuga, queso y tomate
+      price: 2500.00
+      category: Ensalada
+      active: true
+      imageSrc: ensalada-cesar.png
+      ingredients:
+        - ingredientName: Lechuga
+          quantity: 0.15
+        - ingredientName: Tomate
+          quantity: 0.1
+        - ingredientName: Queso Mozzarella
+          quantity: 0.05
+combos:
+  items:
+    - name: Combo Hamburguesa Clásico
+      description: Hamburguesa completa con bebida y postre
+      price: 5500.00
+      active: true
+      imageSrc: combo-hamburguesa.png
+      products:
+        - productName: Hamburguesa Completa
+          quantity: 1
+        - productName: Coca Cola 500ml
+          quantity: 1
+        - productName: Alfajor de Chocolate
+          quantity: 1
+
+    - name: Combo Hamburguesa con Queso
+      description: Hamburguesa con queso, bebida y brownie
+      price: 6000.00
+      active: true
+      imageSrc: combo-queso.png
+      products:
+        - productName: Hamburguesa con Queso
+          quantity: 1
+        - productName: Coca Cola 500ml
+          quantity: 1
+        - productName: Brownie
+          quantity: 1
+
+    - name: Combo Pizza Individual
+      description: Pizza mozzarella con bebida
+      price: 5000.00
+      active: true
+      imageSrc: combo-pizza.png
+      products:
+        - productName: Pizza Mozzarella
+          quantity: 1
+        - productName: Agua Mineral 500ml
+          quantity: 1
+
+    - name: Combo Pizza Napolitana
+      description: Pizza napolitana con jugo natural
+      price: 5500.00
+      active: true
+      imageSrc: combo-napolitana.png
+      products:
+        - productName: Pizza Napolitana
+          quantity: 1
+        - productName: Jugo de Naranja 500ml
+          quantity: 1
+
+    - name: Combo Saludable
+      description: Ensalada César con agua y frutas frescas
+      price: 4200.00
+      active: true
+      imageSrc: combo-saludable.png
+      products:
+        - productName: Ensalada César
+          quantity: 1
+        - productName: Agua Mineral 500ml
+          quantity: 1
+        - productName: Ensalada de Frutas
+          quantity: 1
+
+    - name: Combo Doble Hamburguesa
+      description: Dos hamburguesas completas con dos bebidas
+      price: 9500.00
+      active: true
+      imageSrc: combo-doble.png
+      products:
+        - productName: Hamburguesa Completa
+          quantity: 2
+        - productName: Coca Cola 500ml
+          quantity: 2
+
+    - name: Combo Café y Dulce
+      description: Café americano con alfajor
+      price: 1600.00
+      active: true
+      imageSrc: combo-cafe.png
+      products:
+        - productName: Café Americano
+          quantity: 1
+        - productName: Alfajor de Chocolate
+          quantity: 1
+
+promotions:
+  items:
+    - type: BUY_X_GET_Y
+      name: Hamburguesa + Café Gratis
+      description: Con la compra de cualquier hamburguesa, llevate un café gratis
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays: []
+      applicableHours: []
+      requiredCategory: Hamburguesa
+      freeCategory: Café
+      requiredQuantity: 1
+      freeQuantity: 1
+
+    - type: BUY_X_PAY_Y
+      name: 3x2 en Postres
+      description: Lleva 3 postres y paga solo 2
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays: []
+      applicableHours: []
+      category: Postre
+      requiredQuantity: 3
+      chargedQuantity: 2
+
+    - type: PERCENTAGE_DISCOUNT
+      name: Martes de Ensaladas
+      description: 20% de descuento en todas las ensaladas los martes
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays:
+        - TUESDAY
+      applicableHours: []
+      category: Ensalada
+      discountPercentage: 20
+
+    - type: FIXED_DISCOUNT
+      name: Descuento en Compras Grandes
+      description: $5000 de descuento en compras superiores a $30000
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays: []
+      applicableHours: []
+      minimumPurchase: 30000.00
+      discountAmount: 5000.00
+
+    - type: PERCENTAGE_DISCOUNT
+      name: Happy Hour Pizzas
+      description: 15% de descuento en pizzas de 18:00 a 20:00
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays: []
+      applicableHours:
+        - startTime: "18:00"
+          endTime: "20:00"
+      category: Pizza
+      discountPercentage: 15
+
+    - type: BUY_X_GET_Y
+      name: Café Matutino Gratis
+      description: Compra una hamburguesa y lleva un café gratis de 7:00 a 10:00
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays:
+        - MONDAY
+        - TUESDAY
+        - WEDNESDAY
+        - THURSDAY
+        - FRIDAY
+      applicableHours:
+        - startTime: "07:00"
+          endTime: "10:00"
+      requiredCategory: Hamburguesa
+      freeCategory: Café
+      requiredQuantity: 1
+      freeQuantity: 1
+
+    - type: FIXED_DISCOUNT
+      name: Descuento Nocturno
+      description: $2000 de descuento en compras mayores a $15000 después de las 20:00
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays: []
+      applicableHours:
+        - startTime: "20:00"
+          endTime: "23:59"
+      minimumPurchase: 15000.00
+      discountAmount: 2000.00
+
+    - type: BUY_X_PAY_Y
+      name: 2x1 en Pizzas Tarde-Noche
+      description: Compra 2 pizzas y paga solo 1 después de las 18:00
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays: []
+      applicableHours:
+        - startTime: "18:00"
+          endTime: "23:59"
+      category: Pizza
+      requiredQuantity: 2
+      chargedQuantity: 1
+
+    - type: PERCENTAGE_DISCOUNT
+      name: Descuento Almuerzo
+      description: 30% de descuento en hamburguesas durante el horario de almuerzo
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays:
+        - MONDAY
+        - TUESDAY
+        - WEDNESDAY
+        - THURSDAY
+        - FRIDAY
+      applicableHours:
+        - startTime: "12:00"
+          endTime: "15:00"
+      category: Hamburguesa
+      discountPercentage: 30
+
+    - type: FIXED_DISCOUNT
+      name: Descuento Merienda
+      description: $1500 de descuento en compras mayores a $8000 de 16:00 a 19:00
+      active: true
+      startDate: 2024-01-01
+      endDate: null
+      applicableDays: []
+      applicableHours:
+        - startTime: "16:00"
+          endTime: "19:00"
+      minimumPurchase: 8000.00
+      discountAmount: 1500.00

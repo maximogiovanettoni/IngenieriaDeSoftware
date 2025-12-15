@@ -1,0 +1,156 @@
+.discount-banner {
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  transition: all 0.3s ease;
+}
+
+.discount-banner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(6, 182, 212, 0.25);
+}
+
+.discount-banner-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.discount-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  animation: bounce 2.5s infinite;
+  line-height: 1;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(5deg);
+  }
+}
+
+.discount-details {
+  flex: 1;
+  color: white;
+}
+
+.discount-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  opacity: 0.95;
+}
+
+.best-discount-info {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 10px;
+  backdrop-filter: blur(8px);
+}
+
+.promo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.promo-name {
+  font-size: 13px;
+  font-weight: 700;
+  display: block;
+  letter-spacing: 0.3px;
+}
+
+.promo-description {
+  font-size: 11px;
+  opacity: 0.85;
+  display: block;
+  font-weight: 500;
+}
+
+.discount-note {
+  font-size: 10px;
+  opacity: 0.8;
+  font-style: italic;
+  text-align: center;
+  margin-top: 0;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .discount-banner {
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+
+  .discount-banner-content {
+    gap: 12px;
+  }
+
+  .discount-icon {
+    font-size: 24px;
+  }
+
+  .discount-title {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .best-discount-info {
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+
+  .promo-name {
+    font-size: 12px;
+  }
+
+  .promo-description {
+    font-size: 10px;
+  }
+
+  .discount-note {
+    font-size: 9px;
+  }
+}
+
+/* Container for multiple discount banners */
+.discount-banners-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.discount-banners-container .discount-banner {
+  margin-bottom: 0;
+}
+
+/* Unified styling for consistency */
+.discount-banner--unified {
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.discount-banner--unified:hover {
+  box-shadow: 0 12px 28px rgba(6, 182, 212, 0.3);
+  transform: translateY(-2px);
+}

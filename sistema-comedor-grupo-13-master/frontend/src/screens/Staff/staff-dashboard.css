@@ -1,0 +1,87 @@
+:root{
+  --bg:#000;
+  --panel:#2a2a2a;
+  --panel-2:#141414;
+  --muted:#99a1af;
+  --text:#fff;
+  --border:#4a5565;
+  --blue-1:#155dfc;
+  --blue-2:#2b7fff;
+  --blue-ghost:rgba(21,93,252,.5);
+  --danger-1:#ef4444;
+  --danger-2:#dc2626;
+  --shadow-1:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+
+/* Layout general */
+.page{min-height:100vh;display:flex}
+.center{margin:auto;width:100%;max-width:1200px;padding:32px 24px;position:relative}
+
+/* Header */
+.header{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:20px}
+.logo-badge{
+  width:64px;height:64px;border-radius:9999px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--blue-1),var(--blue-2));box-shadow:var(--shadow-1)
+}
+.logo-badge__ico{color:#fff}
+.header__text{text-align:center}
+.header__title{margin:0;font-size:24px;font-weight:500;color:#fff}
+.header__subtitle{margin:4px 0 0;font-size:13px;color:var(--muted)}
+
+/* Secciones */
+.section{margin-top:16px}
+.section__title{font-size:16px;margin:0 0 12px;color:#fff}
+
+/* Quick stats */
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (min-width:768px){ .stats{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.stat{background:rgba(38,38,38,.3);border:1px solid var(--border);border-radius:10px;padding:12px}
+.stat__label{color:var(--muted);font-size:12px;margin:0 0 6px}
+.stat__value{font-size:20px;font-weight:700;margin:0}
+.stat__value--blue{color:#51a2ff}
+.stat__value--amber{color:#ffc107}
+.stat__value--green{color:#4ade80}
+.stat__value--red{color:#f87171}
+
+/* Tiles / Cards de acciones */
+.tiles{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:768px){ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} }
+
+.card-tile{
+  width:100%;text-align:left;background:rgba(38,38,38,.3);
+  border:1px solid var(--border);border-radius:12px;padding:16px;
+  box-shadow:var(--shadow-1);cursor:pointer;transition:.2s;
+}
+.card-tile:hover{background:rgba(21,93,252,.3);border-color:var(--blue-ghost)}
+.card-tile__row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.card-tile__left{display:flex;align-items:center;gap:12px;flex:1}
+.card-tile__avatar{width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ico-white{color:#fff}
+.card-tile__title{color:#fff;font-size:14px;margin:0}
+.card-tile__desc{color:var(--muted);font-size:12px;margin:2px 0 0}
+.badge{min-width:32px;padding:4px 10px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:rgba(21,93,252,.4);border:1px solid rgba(21,93,252,.6)}
+.badge span{color:#51a2ff;font-size:12px}
+
+/* Carta suave (actividad) */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative}
+.card--soft{background:var(--panel)}
+.empty{color:var(--muted);text-align:center;font-size:13px;padding:16px 0}
+
+/* FABs (botones fijos) */
+.fab{
+  position:fixed;top:24px;z-index:50;display:flex;align-items:center;gap:8px;
+  padding:10px 16px;border-radius:10px;border:1px solid var(--border);
+  background:rgba(38,38,38,.8);backdrop-filter:blur(6px);box-shadow:var(--shadow-1);
+  color:#fff;cursor:pointer;transition:.2s;border-color:var(--border);
+}
+.fab span{font-size:13px}
+.fab--profile{right:180px}
+.fab--profile:hover{background:rgba(21,93,252,.3);border-color:var(--blue-ghost)}
+.fab--logout{right:24px}
+.fab--logout:hover{background:rgba(239,68,68,.3);border-color:rgba(239,68,68,.5)}
+
+/* Utilidades */
+.text-center{text-align:center}
